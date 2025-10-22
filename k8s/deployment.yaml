@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sustainability-management
+  namespace: paklog-core
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sustainability-management
+  template:
+    metadata:
+      labels:
+        app: sustainability-management
+    spec:
+      containers:
+      - name: sustainability-management
+        image: paklog/sustainability-management:latest
+        ports:
+        - containerPort: 8100
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sustainability-management
+  namespace: paklog-core
+spec:
+  selector:
+    app: sustainability-management
+  ports:
+  - port: 8100
+    targetPort: 8100
