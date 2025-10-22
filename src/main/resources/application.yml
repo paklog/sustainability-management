@@ -1,11 +1,12 @@
 spring:
   application:
     name: sustainability-management
-
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/sustainability_management}
-
+      uri: ${MONGODB_URI:mongodb://localhost:27017/sustainability}
+      auto-index-creation: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
@@ -17,7 +18,7 @@ spring:
       value-deserializer: io.cloudevents.kafka.CloudEventDeserializer
 
 server:
-  port: 8100
+  port: ${SERVER_PORT:8100}
 
 management:
   endpoints:
@@ -25,11 +26,24 @@ management:
       exposure:
         include: health,info,metrics,prometheus
   metrics:
-    export:
-      prometheus:
-        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+sustainability:
+  reporting:
+    periods: [MONTHLY, QUARTERLY, ANNUAL]
+  carbon:
+    diesel-factor-kg-co2e-per-liter: 2.68
+    gasoline-factor-kg-co2e-per-liter: 2.31
+    electricity-factor-kg-co2e-per-kwh: 0.92
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 logging:
   level:
     root: INFO
-    com.paklog.sustainability.management: DEBUG
+    com.paklog.sustainability: DEBUG
