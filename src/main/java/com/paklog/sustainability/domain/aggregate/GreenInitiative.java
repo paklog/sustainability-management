@@ -1,20 +1,18 @@
 package com.paklog.sustainability.domain.aggregate;
 
 import com.paklog.sustainability.domain.valueobject.InitiativeStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Data
+@Document(collection = "green_initiatives")
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Document(collection = "green_initiatives")
 public class GreenInitiative {
     @Id
     private String initiativeId;

@@ -8,7 +8,6 @@ import com.paklog.sustainability.domain.aggregate.ESGReport;
 import com.paklog.sustainability.domain.aggregate.GreenInitiative;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +19,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/sustainability")
-@RequiredArgsConstructor
 @Tag(name = "Sustainability Management", description = "ESG and carbon footprint tracking APIs")
 public class SustainabilityController {
 
     private final SustainabilityApplicationService applicationService;
+    public SustainabilityController(SustainabilityApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
+
 
     @PostMapping("/emissions")
     @Operation(summary = "Record carbon emissions")

@@ -1,11 +1,12 @@
 package com.paklog.sustainability.domain.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.paklog.sustainability.domain.aggregate.CarbonFootprint;
 import com.paklog.sustainability.domain.aggregate.ESGReport;
 import com.paklog.sustainability.domain.aggregate.SustainabilityMetric;
 import com.paklog.sustainability.domain.valueobject.EmissionType;
 import com.paklog.sustainability.domain.valueobject.ReportingPeriod;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,8 +15,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Slf4j
 public class ESGReportingService {
+    private static final Logger log = LoggerFactory.getLogger(ESGReportingService.class);
+
 
     public ESGReport generateReport(String warehouseId, 
                                     YearMonth reportMonth, 

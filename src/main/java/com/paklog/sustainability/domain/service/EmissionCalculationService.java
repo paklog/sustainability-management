@@ -1,8 +1,9 @@
 package com.paklog.sustainability.domain.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.paklog.sustainability.domain.aggregate.EmissionSource;
 import com.paklog.sustainability.domain.valueobject.EmissionType;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +11,14 @@ import org.springframework.stereotype.Service;
  * Service for calculating CO2 emissions based on activity data
  */
 @Service
-@Slf4j
 public class EmissionCalculationService {
+    private static final Logger log = LoggerFactory.getLogger(EmissionCalculationService.class);
 
-    @Value("${sustainability.carbon.diesel-factor-kg-co2e-per-liter:2.68}")
+
     private double dieselFactor;
 
-    @Value("${sustainability.carbon.gasoline-factor-kg-co2e-per-liter:2.31}")
     private double gasolineFactor;
 
-    @Value("${sustainability.carbon.electricity-factor-kg-co2e-per-kwh:0.92}")
     private double electricityFactor;
 
     public double calculateFuelEmissions(String fuelType, double liters) {

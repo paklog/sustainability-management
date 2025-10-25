@@ -1,4 +1,6 @@
 package com.paklog.sustainability.application.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.paklog.sustainability.application.command.CreateGreenInitiativeCommand;
 import com.paklog.sustainability.application.command.RecordEmissionCommand;
@@ -12,8 +14,6 @@ import com.paklog.sustainability.domain.repository.GreenInitiativeRepository;
 import com.paklog.sustainability.domain.service.ESGReportingService;
 import com.paklog.sustainability.domain.valueobject.InitiativeStatus;
 import com.paklog.sustainability.domain.valueobject.ReportingPeriod;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,28 +23,34 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class SustainabilityApplicationService {
+    private static final Logger log = LoggerFactory.getLogger(SustainabilityApplicationService.class);
+
 
     private final CarbonFootprintRepository footprintRepository;
     private final ESGReportRepository reportRepository;
     private final GreenInitiativeRepository initiativeRepository;
     private final ESGReportingService reportingService;
+    public SustainabilityApplicationService(CarbonFootprintRepository footprintRepository, ESGReportRepository reportRepository, GreenInitiativeRepository initiativeRepository, ESGReportingService reportingService) {
+        this.footprintRepository = footprintRepository;
+        this.reportRepository = reportRepository;
+        this.initiativeRepository = initiativeRepository;
+        this.reportingService = reportingService;
+    }
+
 
     @Transactional
     public CarbonFootprint recordEmission(RecordEmissionCommand command) {
         CarbonFootprint footprint = CarbonFootprint.builder()
                 .footprintId(UUID.randomUUID().toString())
-                .warehouseId(command.getWarehouseId())
-                .recordDate(command.getRecordDate())
-                .emissionType(command.getEmissionType())
-                .emissionsBySource(command.getEmissionsBySource())
-                .notes(command.getNotes())
+                .warehouseId(command.warehouseId())
+                .recordDate(command.recordDate())
+                .emissionType(command.emissionType())
+                .notes(command.notes())
                 .build();
-        
-        footprint.emissionsBySource.forEach(footprint::addEmission);
-        
+
+        command.emissionsBySource().forEach(footprint::addEmission);
+
         return footprintRepository.save(footprint);
     }
 
@@ -52,18 +58,18 @@ public class SustainabilityApplicationService {
     public GreenInitiative createInitiative(CreateGreenInitiativeCommand command) {
         GreenInitiative initiative = GreenInitiative.builder()
                 .initiativeId(UUID.randomUUID().toString())
-                .name(command.getName())
-                .description(command.getDescription())
+                .name(command.name())
+                .description(command.description())
                 .status(InitiativeStatus.PLANNED)
-                .startDate(command.getStartDate())
-                .targetCompletionDate(command.getTargetCompletionDate())
-                .targetReductionCO2eKg(command.getTargetReductionCO2eKg())
-                .estimatedCost(command.getEstimatedCost())
-                .owner(command.getOwner())
+                .startDate(command.startDate())
+                .targetCompletionDate(command.targetCompletionDate())
+                .targetReductionCO2eKg(command.targetReductionCO2eKg())
+                .estimatedCost(command.estimatedCost())
+                .owner(command.owner())
                 .actualReductionCO2eKg(0.0)
                 .actualCost(0.0)
                 .build();
-        
+
         return initiativeRepository.save(initiative);
     }
 

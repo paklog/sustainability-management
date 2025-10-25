@@ -12,6 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class SustainabilityManagementApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SustainabilityManagementApplication.java, args);
+        SpringApplication.run(SustainabilityManagementApplication.class, args);
     }
 }
